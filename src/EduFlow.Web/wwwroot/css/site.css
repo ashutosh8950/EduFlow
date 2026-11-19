@@ -129,6 +129,9 @@ p, label, .form-text { color: var(--ef-muted); }
 .dashboard-table-card { overflow: hidden; }
 .dashboard-table-wrap { border: 0; border-radius: 0; box-shadow: none; }
 .empty-state { padding: 1.25rem 0; }
+.profile-card { max-width: 860px; }
+.profile-card dt { color: var(--ef-muted); font-family: var(--ef-mono); font-size: .72rem; letter-spacing: .04em; text-transform: uppercase; }
+.profile-card dd { color: var(--ef-text); }
 
 .list-group-item { color: var(--ef-text); background: transparent; border-color: var(--ef-border); }
 .dropdown-menu { background: var(--ef-surface); border-color: var(--ef-border-strong); box-shadow: 0 18px 44px rgba(0, 0, 0, .3); }

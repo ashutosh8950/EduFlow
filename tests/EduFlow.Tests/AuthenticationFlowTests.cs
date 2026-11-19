@@ -142,6 +142,7 @@ public sealed class AuthenticationFlowTests
         secondStudent.FirstName = "Second";
         Assert.True((await userManager.CreateAsync(firstStudent)).Succeeded);
         Assert.True((await userManager.CreateAsync(secondStudent)).Succeeded);
+        dbContext.Users.AddRange(firstStudent, secondStudent);
         dbContext.StudentProfiles.AddRange(
             new StudentProfile { UserId = firstStudent.Id },
             new StudentProfile { UserId = secondStudent.Id });
@@ -154,10 +155,9 @@ public sealed class AuthenticationFlowTests
                 [new Claim(ClaimTypes.NameIdentifier, firstStudent.Id)], "test"))
         };
         var controller = new StudentController(
-            dbContext,
-            userManager,
             new CourseService(new CourseRepository(dbContext)),
-            new AdmissionApplicationService(new AdmissionApplicationRepository(dbContext)))
+            new AdmissionApplicationService(new AdmissionApplicationRepository(dbContext)),
+            new StudentProfileService(dbContext))
         {
             ControllerContext = new ControllerContext(new ActionContext(
                 httpContext,

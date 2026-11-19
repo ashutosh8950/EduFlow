@@ -24,6 +24,7 @@ public static class InfrastructureServiceCollectionExtensions
         services.AddScoped<ICourseService, CourseService>();
         services.AddScoped<IAdmissionApplicationRepository, AdmissionApplicationRepository>();
         services.AddScoped<IAdmissionApplicationService, AdmissionApplicationService>();
+        services.AddScoped<IStudentProfileService, StudentProfileService>();
 
         services.AddIdentity<ApplicationUser, IdentityRole>(options =>
             {

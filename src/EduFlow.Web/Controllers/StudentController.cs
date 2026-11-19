@@ -1,22 +1,17 @@
 using System.Security.Claims;
 using EduFlow.Application.Domain;
 using EduFlow.Application.Services;
-using EduFlow.Infrastructure.Identity;
-using EduFlow.Infrastructure.Persistence;
 using EduFlow.Web.Models;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace EduFlow.Web.Controllers;
 
 [Authorize(Policy = "StudentAccess")]
 public sealed class StudentController(
-    ApplicationDbContext dbContext,
-    UserManager<ApplicationUser> userManager,
     ICourseService courseService,
-    IAdmissionApplicationService admissionService) : Controller
+    IAdmissionApplicationService admissionService,
+    IStudentProfileService profileService) : Controller
 {
     [HttpGet]
     public async Task<IActionResult> Courses(CancellationToken cancellationToken)
@@ -52,17 +47,68 @@ public sealed class StudentController(
             return Challenge();
         }
 
-        var user = await userManager.FindByIdAsync(userId);
-        var profile = await dbContext.StudentProfiles
-            .AsNoTracking()
-            .SingleOrDefaultAsync(item => item.UserId == userId, cancellationToken);
-
-        if (user is null || profile is null)
+        var profile = await profileService.GetAsync(userId, cancellationToken);
+        if (profile is null)
         {
             return NotFound();
         }
 
-        return View(new StudentProfileViewModel(user.FirstName, user.LastName, user.Email ?? string.Empty));
+        return View(new StudentProfileViewModel(
+            profile.FirstName, profile.LastName, profile.Email, profile.PhoneNumber,
+            profile.DateOfBirth, profile.AddressLine, profile.City, profile.Region, profile.PostalCode));
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> EditProfile(CancellationToken cancellationToken)
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (userId is null) return Challenge();
+
+        var profile = await profileService.GetAsync(userId, cancellationToken);
+        if (profile is null) return NotFound();
+
+        return View(new EditStudentProfileViewModel
+        {
+            FirstName = profile.FirstName,
+            LastName = profile.LastName,
+            PhoneNumber = profile.PhoneNumber,
+            DateOfBirth = profile.DateOfBirth,
+            AddressLine = profile.AddressLine,
+            City = profile.City,
+            Region = profile.Region,
+            PostalCode = profile.PostalCode
+        });
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> EditProfile(
+        EditStudentProfileViewModel model,
+        CancellationToken cancellationToken)
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (userId is null) return Challenge();
+
+        if (model.DateOfBirth > DateOnly.FromDateTime(DateTime.UtcNow.Date))
+        {
+            ModelState.AddModelError(nameof(model.DateOfBirth), "Date of birth cannot be in the future.");
+        }
+
+        if (!ModelState.IsValid)
+        {
+            return View(model);
+        }
+
+        var updated = await profileService.UpdateAsync(userId, new UpdateStudentProfileInput(
+            model.FirstName, model.LastName, model.PhoneNumber, model.DateOfBirth,
+            model.AddressLine, model.City, model.Region, model.PostalCode), cancellationToken);
+        if (!updated)
+        {
+            return NotFound();
+        }
+
+        TempData["SuccessMessage"] = "Your profile was updated.";
+        return RedirectToAction(nameof(Profile));
     }
 
     [HttpGet]

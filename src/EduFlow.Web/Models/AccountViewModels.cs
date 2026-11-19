@@ -35,4 +35,47 @@ public sealed class LoginViewModel
     public string? ReturnUrl { get; set; }
 }
 
-public sealed record StudentProfileViewModel(string FirstName, string LastName, string Email);
+public sealed record StudentProfileViewModel(
+    string FirstName,
+    string LastName,
+    string Email,
+    string? PhoneNumber,
+    DateOnly? DateOfBirth,
+    string? AddressLine,
+    string? City,
+    string? Region,
+    string? PostalCode);
+
+public sealed class EditStudentProfileViewModel
+{
+    [Required, StringLength(100)]
+    [Display(Name = "First name")]
+    public string FirstName { get; set; } = string.Empty;
+
+    [Required, StringLength(100)]
+    [Display(Name = "Last name")]
+    public string LastName { get; set; } = string.Empty;
+
+    [Phone, StringLength(30)]
+    [Display(Name = "Phone number")]
+    public string? PhoneNumber { get; set; }
+
+    [DataType(DataType.Date)]
+    [Display(Name = "Date of birth")]
+    public DateOnly? DateOfBirth { get; set; }
+
+    [StringLength(200)]
+    [Display(Name = "Address")]
+    public string? AddressLine { get; set; }
+
+    [StringLength(100)]
+    public string? City { get; set; }
+
+    [StringLength(100)]
+    [Display(Name = "State / region")]
+    public string? Region { get; set; }
+
+    [StringLength(20)]
+    [Display(Name = "Postal code")]
+    public string? PostalCode { get; set; }
+}

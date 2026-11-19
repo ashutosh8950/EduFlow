@@ -22,6 +22,9 @@ EduFlow is intended to provide a secure, traceable admission workflow that allow
 - Register as a Student through `/Account/Register`.
 - Sign in and sign out through `/Account/Login` and POST `/Account/Logout`.
 - View the student profile at `/Student/Profile`.
+- Edit the student profile at `/Student/EditProfile`.
+- Update first name, last name, phone number, date of birth, address, city, region, and postal code.
+- Receive server-side validation for required fields, field lengths, phone format, and future dates of birth.
 - Browse active courses at `/Student/Courses`.
 - View an active course at `/Student/CourseDetails/{id}`.
 - Create an application at `/Student/CreateApplication?courseId={courseId}`.
@@ -33,7 +36,7 @@ EduFlow is intended to provide a secure, traceable admission workflow that allow
 - Submit the existing Draft without creating a second application.
 - View public status history and public admissions messages.
 
-The current implementation provides profile viewing only. A student profile edit workflow is not currently implemented.
+Email is displayed as read-only. Country is not currently modeled by the domain and is therefore not collected.
 
 ### Admissions Officers
 
@@ -50,12 +53,13 @@ Admissions Officers are initialized through local .NET User Secrets configuratio
 ### Administrators
 
 - Access the administration page at `/Administration`.
+- View application statistics and recent applications from the Administrator dashboard.
 - View all applications through `/Admissions`.
 - Review applications using the existing review policy.
 - Manage courses through `/Courses`.
 - Create, edit, view, activate, and deactivate courses.
 
-The current `/Administration` landing page is intentionally minimal. Course management and application review are exposed through their dedicated routes.
+The `/Administration` dashboard shows total, submitted, under-review, approved, rejected, and active-course counts, plus recent application activity.
 
 ## Application Workflow
 
@@ -124,7 +128,7 @@ Responsibilities are separated as follows:
 - `EduFlow.Application`: domain entities, status rules, service contracts, DTOs, and application services.
 - `EduFlow.Infrastructure`: EF Core persistence, repositories, Identity integration, SQL Server configuration, and migrations.
 - `EduFlow.Web`: MVC controllers, view models, Razor views, authorization policies, and application bootstrap.
-- `EduFlow.Tests`: xUnit tests for authentication, authorization, course management, admission workflow, and integrity rules.
+- `EduFlow.Tests`: xUnit tests for authentication, authorization, course management, admission workflow, profile management, dashboard behavior, and integrity rules.
 
 ## Database Design
 
@@ -316,14 +320,13 @@ The API and OpenAPI document require the application to be running and the confi
 
 The following items are outside the current implemented scope or remain candidates for future work:
 
-- Student profile editing.
-- A richer Administrator dashboard and statistics view.
 - Browser-based end-to-end test automation against SQL Server.
 - Email notifications.
 - File uploads.
 - Payments.
 - Deployment and hosting automation.
 - Production secret management and operational monitoring.
+- Production host allow-list configuration and deployment-specific HTTPS/HSTS setup.
 - Expanded API coverage beyond the course endpoints.
 - More polished, EduFlow-specific homepage content and visual branding.
 
