@@ -1,0 +1,30 @@
+@model CourseDetailsViewModel
+@{
+    ViewData["Title"] = Model.Name;
+}
+
+<div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4">
+    <div>
+        <a asp-action="Index" class="link-secondary text-decoration-none">Courses</a>
+        <h1 class="h2 mt-2 mb-1">@Model.Name</h1>
+        <span class="badge @(Model.IsActive ? "text-bg-success" : "text-bg-secondary")">@(Model.IsActive ? "Active" : "Inactive")</span>
+    </div>
+    <div class="d-flex flex-wrap gap-2">
+        <a asp-action="Edit" asp-route-id="@Model.CourseId" class="btn btn-outline-primary">Edit course</a>
+        <form asp-action="SetActive" asp-route-id="@Model.CourseId" method="post"
+              onsubmit="return confirm('@(Model.IsActive ? "Deactivate" : "Activate") this course?');">
+            <input type="hidden" name="isActive" value="@(!Model.IsActive)" />
+            <button type="submit" class="btn @(Model.IsActive ? "btn-outline-danger" : "btn-outline-success")">
+                @(Model.IsActive ? "Deactivate" : "Activate")
+            </button>
+        </form>
+    </div>
+</div>
+
+<dl class="row">
+    <dt class="col-sm-3">Course code</dt><dd class="col-sm-9">@Model.Code</dd>
+    <dt class="col-sm-3">Description</dt><dd class="col-sm-9 text-break">@Model.Description</dd>
+    <dt class="col-sm-3">Duration</dt><dd class="col-sm-9">@Model.DurationMonths months</dd>
+    <dt class="col-sm-3">Created (UTC)</dt><dd class="col-sm-9">@Model.CreatedUtc.ToString("yyyy-MM-dd HH:mm 'UTC'")</dd>
+    <dt class="col-sm-3">Updated (UTC)</dt><dd class="col-sm-9">@(Model.UpdatedUtc?.ToString("yyyy-MM-dd HH:mm 'UTC'") ?? "Not updated")</dd>
+</dl>

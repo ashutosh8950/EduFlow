@@ -1,0 +1,13 @@
+@model CourseFormViewModel
+@{
+    ViewData["Title"] = "Create course";
+    ViewData["FormAction"] = "Create";
+    ViewData["SubmitLabel"] = "Create course";
+}
+
+<h1 class="h2 mb-4">Create course</h1>
+<div class="row">
+    <div class="col-lg-8 col-xl-7">
+        <partial name="_CourseForm" model="Model" />
+    </div>
+</div>

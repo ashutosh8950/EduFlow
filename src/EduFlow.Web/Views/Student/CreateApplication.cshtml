@@ -1,0 +1,11 @@
+@model EduFlow.Web.Models.CreateApplicationViewModel
+@{ ViewData["Title"] = "Create application"; }
+<h1>Apply to @Model.CourseCode</h1><p class="text-muted">@Model.CourseName</p>
+<form asp-action="CreateApplication" method="post">
+    <input asp-for="CourseId" type="hidden" /><input asp-for="CourseCode" type="hidden" /><input asp-for="CourseName" type="hidden" />
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="mb-3"><label asp-for="PersonalStatement" class="form-label"></label><textarea asp-for="PersonalStatement" class="form-control" rows="8"></textarea><span asp-validation-for="PersonalStatement" class="text-danger"></span></div>
+    <button class="btn btn-outline-secondary" name="action" value="save">Save draft</button>
+    <button class="btn btn-primary" name="action" value="submit">Submit application</button>
+</form>
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

@@ -1,0 +1,15 @@
+﻿**/bin/
+**/obj/
+.vs/
+.vscode/
+TestResults/
+*.user
+*.suo
+*.log
+*.cache
+.env
+.env.*
+appsettings.Development.json
+secrets.json
+
+**/*-obj/

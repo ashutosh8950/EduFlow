@@ -1,0 +1,13 @@
+@baseUrl = http://localhost:5113
+
+### List active courses (requires an authenticated Student session)
+GET {{baseUrl}}/api/v1/courses
+Accept: application/json
+
+### Get active course details (requires an authenticated Student session)
+GET {{baseUrl}}/api/v1/courses/1
+Accept: application/json
+
+### Inactive or unknown course returns 404
+GET {{baseUrl}}/api/v1/courses/2147483647
+Accept: application/json

@@ -1,0 +1,9 @@
+@model EduFlow.Web.Models.ReviewApplicationViewModel
+@{ ViewData["Title"] = "Review application"; }
+<h1>Review @Model.Reference</h1><p>@Model.CourseCode — @Model.CourseName</p><p class="white-space-pre-line">@Model.PersonalStatement</p>
+<form asp-action="Review" method="post"><input asp-for="ApplicationId" type="hidden" /><input asp-for="RowVersion" type="hidden" /><input asp-for="Status" type="hidden" /><div asp-validation-summary="ModelOnly" class="text-danger"></div>
+<div class="mb-3"><label asp-for="ToStatus" class="form-label"></label><select asp-for="ToStatus" class="form-select"><option value="UnderReview">Under review</option><option value="Approved">Approve</option><option value="Rejected">Reject</option></select></div>
+<div class="mb-3"><label asp-for="PublicMessage" class="form-label"></label><textarea asp-for="PublicMessage" class="form-control"></textarea><span asp-validation-for="PublicMessage" class="text-danger"></span></div>
+<div class="mb-3"><label asp-for="InternalNote" class="form-label"></label><textarea asp-for="InternalNote" class="form-control"></textarea><span asp-validation-for="InternalNote" class="text-danger"></span></div>
+<button class="btn btn-primary" type="submit">Save review</button> <a class="btn btn-outline-secondary" asp-action="Details" asp-route-id="@Model.ApplicationId">Cancel</a></form>
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

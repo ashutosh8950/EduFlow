@@ -1,0 +1,17 @@
+@model CourseDetailsViewModel
+@{
+    ViewData["Title"] = Model.Name;
+}
+
+<a asp-action="Courses" class="link-secondary text-decoration-none">Course catalog</a>
+<h1 class="h2 mt-2 mb-1">@Model.Name</h1>
+<p class="text-secondary mb-4">Course code: <span class="fw-semibold text-body">@Model.Code</span></p>
+
+<dl class="row">
+    <dt class="col-sm-3">Description</dt><dd class="col-sm-9 text-break">@Model.Description</dd>
+    <dt class="col-sm-3">Duration</dt><dd class="col-sm-9">@Model.DurationMonths months</dd>
+</dl>
+@if (Model.IsActive)
+{
+    <a class="btn btn-primary" asp-controller="Student" asp-action="CreateApplication" asp-route-courseId="@Model.CourseId">Apply to this course</a>
+}
