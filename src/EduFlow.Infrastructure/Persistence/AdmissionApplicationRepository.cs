@@ -33,6 +33,53 @@ public sealed class AdmissionApplicationRepository(ApplicationDbContext dbContex
         return await LoadApplications(query).OrderBy(a => a.CreatedUtc).ToListAsync(cancellationToken);
     }
 
+    public async Task<AdministratorDashboardData> GetAdministratorDashboardAsync(
+        int recentLimit,
+        CancellationToken cancellationToken)
+    {
+        recentLimit = Math.Clamp(recentLimit, 1, 50);
+
+        var counts = await dbContext.AdmissionApplications
+            .AsNoTracking()
+            .GroupBy(_ => 1)
+            .Select(group => new
+            {
+                Total = group.Count(),
+                Submitted = group.Count(application => application.Status == AdmissionStatus.Submitted),
+                UnderReview = group.Count(application => application.Status == AdmissionStatus.UnderReview),
+                Approved = group.Count(application => application.Status == AdmissionStatus.Approved),
+                Rejected = group.Count(application => application.Status == AdmissionStatus.Rejected)
+            })
+            .SingleOrDefaultAsync(cancellationToken);
+
+        var activeCourses = await dbContext.Courses
+            .AsNoTracking()
+            .CountAsync(course => course.IsActive, cancellationToken);
+
+        var recentApplications = await (
+            from application in dbContext.AdmissionApplications.AsNoTracking()
+            join user in dbContext.Users.AsNoTracking() on application.StudentUserId equals user.Id
+            join course in dbContext.Courses.AsNoTracking() on application.CourseId equals course.CourseId
+            orderby (application.UpdatedUtc ?? application.CreatedUtc) descending
+            select new AdministratorRecentApplicationData(
+                application.ApplicationId,
+                user.FirstName + " " + user.LastName,
+                course.Name,
+                application.Status,
+                application.CreatedUtc,
+                application.SubmittedUtc)
+        ).Take(recentLimit).ToListAsync(cancellationToken);
+
+        return new AdministratorDashboardData(
+            counts?.Total ?? 0,
+            counts?.Submitted ?? 0,
+            counts?.UnderReview ?? 0,
+            counts?.Approved ?? 0,
+            counts?.Rejected ?? 0,
+            activeCourses,
+            recentApplications);
+    }
+
     public Task<bool> ExistsForCourseAsync(string studentUserId, int courseId, CancellationToken cancellationToken) =>
         dbContext.AdmissionApplications.AnyAsync(a => a.StudentUserId == studentUserId && a.CourseId == courseId, cancellationToken);
 

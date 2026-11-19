@@ -61,6 +61,23 @@ public sealed record ApplicationOperationResult(
     public bool Succeeded => Error is null && (StudentApplication is not null || ReviewApplication is not null);
 }
 
+public sealed record AdministratorRecentApplicationData(
+    long ApplicationId,
+    string StudentName,
+    string CourseName,
+    AdmissionStatus Status,
+    DateTimeOffset CreatedUtc,
+    DateTimeOffset? SubmittedUtc);
+
+public sealed record AdministratorDashboardData(
+    int TotalApplications,
+    int SubmittedApplications,
+    int UnderReviewApplications,
+    int ApprovedApplications,
+    int RejectedApplications,
+    int ActiveCourses,
+    IReadOnlyList<AdministratorRecentApplicationData> RecentApplications);
+
 public interface IAdmissionApplicationRepository
 {
     Task<IReadOnlyList<AdmissionApplication>> GetForStudentAsync(string studentUserId, CancellationToken cancellationToken);
@@ -74,6 +91,7 @@ public interface IAdmissionApplicationRepository
     Task<bool> AddAsync(AdmissionApplication application, CancellationToken cancellationToken);
     Task<bool> UpdateAsync(AdmissionApplication application, byte[] originalRowVersion, CancellationToken cancellationToken);
     Task<bool> SaveReviewAsync(AdmissionApplication application, ApplicationStatusHistory history, byte[] originalRowVersion, CancellationToken cancellationToken);
+    Task<AdministratorDashboardData> GetAdministratorDashboardAsync(int recentLimit, CancellationToken cancellationToken);
 }
 
 public interface IAdmissionApplicationService
@@ -85,6 +103,7 @@ public interface IAdmissionApplicationService
     Task<ApplicationOperationResult> ReviewAsync(string reviewerUserId, long applicationId, ReviewApplicationInput input, CancellationToken cancellationToken);
     Task<IReadOnlyList<ReviewApplicationDto>> GetReviewQueueAsync(bool allStatuses, CancellationToken cancellationToken);
     Task<ReviewApplicationDto?> GetReviewApplicationAsync(long applicationId, CancellationToken cancellationToken);
+    Task<AdministratorDashboardData> GetAdministratorDashboardAsync(int recentLimit, CancellationToken cancellationToken);
 }
 
 public sealed class AdmissionApplicationService(IAdmissionApplicationRepository repository) : IAdmissionApplicationService
@@ -270,6 +289,9 @@ public sealed class AdmissionApplicationService(IAdmissionApplicationRepository 
 
     public async Task<IReadOnlyList<ReviewApplicationDto>> GetReviewQueueAsync(bool allStatuses, CancellationToken cancellationToken) =>
         (await repository.GetReviewQueueAsync(allStatuses, cancellationToken)).Select(ToReviewDto).ToArray();
+
+    public Task<AdministratorDashboardData> GetAdministratorDashboardAsync(int recentLimit, CancellationToken cancellationToken) =>
+        repository.GetAdministratorDashboardAsync(recentLimit, cancellationToken);
 
     public async Task<ReviewApplicationDto?> GetReviewApplicationAsync(long applicationId, CancellationToken cancellationToken)
     {

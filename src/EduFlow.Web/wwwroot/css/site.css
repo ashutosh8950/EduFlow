@@ -117,6 +117,18 @@ p, label, .form-text { color: var(--ef-muted); }
 .status-underreview { color: var(--ef-warning); background: rgba(251, 191, 36, .12); border-color: rgba(251, 191, 36, .3); }
 .status-approved { color: var(--ef-success); background: rgba(74, 222, 128, .12); border-color: rgba(74, 222, 128, .3); }
 .status-rejected { color: var(--ef-danger); background: rgba(251, 113, 133, .12); border-color: rgba(251, 113, 133, .3); }
+.dashboard-stat-card { border-top: 2px solid var(--ef-border-strong); }
+.dashboard-stat-submitted { border-top-color: var(--ef-primary); }
+.dashboard-stat-review { border-top-color: var(--ef-warning); }
+.dashboard-stat-approved { border-top-color: var(--ef-success); }
+.dashboard-stat-rejected { border-top-color: var(--ef-danger); }
+.dashboard-stat-courses { border-top-color: var(--ef-violet); }
+.stat-label { margin-bottom: .75rem; color: var(--ef-muted); font-family: var(--ef-mono); font-size: .7rem; letter-spacing: .08em; text-transform: uppercase; }
+.stat-value { margin-bottom: .2rem; color: var(--ef-white); font-family: var(--ef-display); font-size: 2.4rem; font-weight: 800; line-height: 1; }
+.stat-caption { margin-bottom: 0; color: var(--ef-muted); font-size: .85rem; }
+.dashboard-table-card { overflow: hidden; }
+.dashboard-table-wrap { border: 0; border-radius: 0; box-shadow: none; }
+.empty-state { padding: 1.25rem 0; }
 
 .list-group-item { color: var(--ef-text); background: transparent; border-color: var(--ef-border); }
 .dropdown-menu { background: var(--ef-surface); border-color: var(--ef-border-strong); box-shadow: 0 18px 44px rgba(0, 0, 0, .3); }

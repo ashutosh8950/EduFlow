@@ -1,5 +1,127 @@
+@using EduFlow.Application.Domain
+@model EduFlow.Web.Models.AdministrationDashboardViewModel
 @{
-    ViewData["Title"] = "Administration";
+    ViewData["Title"] = "Administrator dashboard";
 }
 
-<h1 class="h2">Administration</h1>
+<div class="page-heading d-flex flex-wrap justify-content-between align-items-end gap-3">
+    <div>
+        <p class="eyebrow mb-2">Administrator workspace</p>
+        <h1 class="mb-2">Admission overview</h1>
+        <p class="mb-0">A concise view of application activity and current course availability.</p>
+    </div>
+    <div class="hero-actions">
+        <a class="btn btn-primary" asp-controller="Courses" asp-action="Index">Manage courses</a>
+        <a class="btn btn-outline-secondary" asp-controller="Admissions" asp-action="Index">Review applications</a>
+    </div>
+</div>
+
+<section aria-labelledby="dashboard-statistics" class="mb-4">
+    <h2 id="dashboard-statistics" class="visually-hidden">Application statistics</h2>
+    <div class="row g-3">
+        <div class="col-12 col-sm-6 col-xl-4">
+            <div class="card dashboard-stat-card h-100">
+                <div class="card-body">
+                    <p class="stat-label">Total applications</p>
+                    <p class="stat-value">@Model.TotalApplications</p>
+                    <p class="stat-caption">All saved applications</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-sm-6 col-xl-4">
+            <div class="card dashboard-stat-card dashboard-stat-submitted h-100">
+                <div class="card-body">
+                    <p class="stat-label">Submitted</p>
+                    <p class="stat-value">@Model.SubmittedApplications</p>
+                    <p class="stat-caption">Ready for review</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-sm-6 col-xl-4">
+            <div class="card dashboard-stat-card dashboard-stat-review h-100">
+                <div class="card-body">
+                    <p class="stat-label">Under review</p>
+                    <p class="stat-value">@Model.UnderReviewApplications</p>
+                    <p class="stat-caption">Currently being assessed</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-sm-6 col-xl-4">
+            <div class="card dashboard-stat-card dashboard-stat-approved h-100">
+                <div class="card-body">
+                    <p class="stat-label">Approved</p>
+                    <p class="stat-value">@Model.ApprovedApplications</p>
+                    <p class="stat-caption">Successful decisions</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-sm-6 col-xl-4">
+            <div class="card dashboard-stat-card dashboard-stat-rejected h-100">
+                <div class="card-body">
+                    <p class="stat-label">Rejected</p>
+                    <p class="stat-value">@Model.RejectedApplications</p>
+                    <p class="stat-caption">Closed decisions</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-sm-6 col-xl-4">
+            <div class="card dashboard-stat-card dashboard-stat-courses h-100">
+                <div class="card-body">
+                    <p class="stat-label">Active courses</p>
+                    <p class="stat-value">@Model.ActiveCourses</p>
+                    <p class="stat-caption">Currently accepting applications</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section aria-labelledby="recent-applications" class="card dashboard-table-card mb-4">
+    <div class="card-header d-flex flex-wrap justify-content-between align-items-center gap-2 p-4">
+        <div>
+            <p class="eyebrow mb-2">Latest activity</p>
+            <h2 id="recent-applications" class="h4 mb-0">Recent applications</h2>
+        </div>
+        <a class="btn btn-sm btn-outline-primary" asp-controller="Admissions" asp-action="Index">View application queue</a>
+    </div>
+    @if (Model.RecentApplications.Count == 0)
+    {
+        <div class="card-body p-4">
+            <div class="empty-state">
+                <p class="eyebrow mb-2">No activity yet</p>
+                <h3 class="h5">No applications have been created.</h3>
+                <p class="mb-0">New student applications will appear here once they are saved.</p>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive dashboard-table-wrap">
+            <table class="table align-middle">
+                <thead>
+                    <tr>
+                        <th>Reference</th>
+                        <th>Student</th>
+                        <th>Course</th>
+                        <th>Status</th>
+                        <th>Submission date</th>
+                        <th><span class="visually-hidden">Action</span></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var application in Model.RecentApplications)
+                    {
+                        <tr>
+                            <td class="font-monospace text-primary">@application.Reference</td>
+                            <td>@application.StudentName</td>
+                            <td>@application.CourseName</td>
+                            <td><span class="status-badge status-@application.Status.ToString().ToLowerInvariant()">@application.Status</span></td>
+                            <td>@(application.SubmittedUtc?.ToLocalTime().ToString("g") ?? "Not submitted")</td>
+                            <td class="text-end"><a class="btn btn-sm btn-outline-primary" asp-controller="Admissions" asp-action="Details" asp-route-id="@application.ApplicationId">View</a></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</section>
