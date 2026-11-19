@@ -2,7 +2,54 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="app-hero text-center">
+    <p class="eyebrow mb-3">Student admissions, in one flow</p>
+    <h1 class="display-4 mb-3">Move applications<br /><span class="text-primary">forward with clarity.</span></h1>
+    <p class="lead mx-auto mb-4" style="max-width: 640px;">EduFlow brings course discovery, student applications and admissions review into one focused workspace.</p>
+    <div class="hero-actions justify-content-center">
+        @if (User.IsInRole("Student"))
+        {
+            <a class="btn btn-primary px-4" asp-controller="Student" asp-action="Courses">Browse courses</a>
+            <a class="btn btn-outline-secondary px-4" asp-controller="Student" asp-action="MyApplications">View applications</a>
+        }
+        else if (User.IsInRole("AdmissionsOfficer") || User.IsInRole("Administrator"))
+        {
+            <a class="btn btn-primary px-4" asp-controller="Admissions" asp-action="Index">Open review queue</a>
+        }
+        else
+        {
+            <a class="btn btn-primary px-4" asp-controller="Account" asp-action="Register">Create student account</a>
+            <a class="btn btn-outline-secondary px-4" asp-controller="Account" asp-action="Login">Sign in</a>
+        }
+    </div>
+</div>
+
+<div class="row g-4 pb-4">
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body p-4">
+                <p class="eyebrow mb-3">01 / Discover</p>
+                <h2 class="h4">Find the right course</h2>
+                <p class="mb-0">Explore active courses and review the details before starting an application.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body p-4">
+                <p class="eyebrow mb-3">02 / Apply</p>
+                <h2 class="h4">Build at your pace</h2>
+                <p class="mb-0">Save a thoughtful personal statement as a draft, resume it later and submit when ready.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body p-4">
+                <p class="eyebrow mb-3">03 / Review</p>
+                <h2 class="h4">Keep decisions visible</h2>
+                <p class="mb-0">Follow public status updates while admissions teams work through the review queue.</p>
+            </div>
+        </div>
+    </div>
 </div>

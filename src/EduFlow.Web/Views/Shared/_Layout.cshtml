@@ -5,15 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - EduFlow.Web</title>
     <script type="importmap"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&family=Syne:wght@600;700;800&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/EduFlow.Web.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 </head>
-<body>
+<body class="app-shell">
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark app-navbar border-bottom box-shadow mb-3">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">EduFlow.Web</a>
+                <a class="navbar-brand app-brand" asp-area="" asp-controller="Home" asp-action="Index"><span>Edu</span>Flow</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -21,23 +24,23 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
                         @if (User.IsInRole("Administrator"))
                         {
-                            <li class="nav-item"><a class="nav-link text-dark" asp-controller="Courses" asp-action="Index">Course management</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Courses" asp-action="Index">Course management</a></li>
                         }
                         @if (User.IsInRole("Student"))
                         {
-                            <li class="nav-item"><a class="nav-link text-dark" asp-controller="Student" asp-action="Courses">Course catalog</a></li>
-                            <li class="nav-item"><a class="nav-link text-dark" asp-controller="Student" asp-action="MyApplications">My applications</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Student" asp-action="Courses">Course catalog</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Student" asp-action="MyApplications">My applications</a></li>
                         }
                         @if (User.IsInRole("AdmissionsOfficer") || User.IsInRole("Administrator"))
                         {
-                            <li class="nav-item"><a class="nav-link text-dark" asp-controller="Admissions" asp-action="Index">Applications</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Admissions" asp-action="Index">Applications</a></li>
                         }
                     </ul>
                     <ul class="navbar-nav">
@@ -45,18 +48,18 @@
                         {
                             @if (User.IsInRole("Student"))
                             {
-                                <li class="nav-item"><a class="nav-link text-dark" asp-controller="Student" asp-action="Profile">My profile</a></li>
+                                <li class="nav-item"><a class="nav-link" asp-controller="Student" asp-action="Profile">My profile</a></li>
                             }
                             <li class="nav-item">
                                 <form asp-controller="Account" asp-action="Logout" method="post">
-                                    <button type="submit" class="nav-link btn btn-link text-dark">Sign out</button>
+                                    <button type="submit" class="nav-link btn btn-link">Sign out</button>
                                 </form>
                             </li>
                         }
                         else
                         {
-                            <li class="nav-item"><a class="nav-link text-dark" asp-controller="Account" asp-action="Login">Sign in</a></li>
-                            <li class="nav-item"><a class="nav-link text-dark" asp-controller="Account" asp-action="Register">Register</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Account" asp-action="Login">Sign in</a></li>
+                            <li class="nav-item"><a class="nav-link nav-link-cta" asp-controller="Account" asp-action="Register">Register</a></li>
                         }
                     </ul>
                 </div>
